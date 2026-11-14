@@ -1,0 +1,181 @@
+{
+  "info": {
+    "name": "Shop API - Laravel",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": "RESTful API Website bán hàng. Chạy Login Admin / Login Customer trước để lưu token."
+  },
+  "variable": [
+    { "key": "base_url", "value": "http://127.0.0.1:8000/api" },
+    { "key": "admin_token", "value": "" },
+    { "key": "customer_token", "value": "" }
+  ],
+  "item": [
+    {
+      "name": "1. Auth",
+      "item": [
+        {
+          "name": "Register",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Accept", "value": "application/json" }],
+            "url": "{{base_url}}/auth/register",
+            "body": { "mode": "raw", "options": { "raw": { "language": "json" } }, "raw": "{\n  \"name\": \"Nguyễn Văn C\",\n  \"email\": \"c@example.com\",\n  \"password\": \"123456\",\n  \"password_confirmation\": \"123456\",\n  \"phone\": \"0911111111\",\n  \"address\": \"Đà Nẵng\"\n}" }
+          }
+        },
+        {
+          "name": "Login Admin",
+          "event": [{ "listen": "test", "script": { "exec": ["pm.collectionVariables.set('admin_token', pm.response.json().data.token);"] } }],
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Accept", "value": "application/json" }],
+            "url": "{{base_url}}/auth/login",
+            "body": { "mode": "raw", "options": { "raw": { "language": "json" } }, "raw": "{\n  \"email\": \"admin@example.com\",\n  \"password\": \"123456\"\n}" }
+          }
+        },
+        {
+          "name": "Login Customer",
+          "event": [{ "listen": "test", "script": { "exec": ["pm.collectionVariables.set('customer_token', pm.response.json().data.token);"] } }],
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Accept", "value": "application/json" }],
+            "url": "{{base_url}}/auth/login",
+            "body": { "mode": "raw", "options": { "raw": { "language": "json" } }, "raw": "{\n  \"email\": \"customer@example.com\",\n  \"password\": \"123456\"\n}" }
+          }
+        },
+        {
+          "name": "Me",
+          "request": { "method": "GET", "header": [{ "key": "Accept", "value": "application/json" }, { "key": "Authorization", "value": "Bearer {{customer_token}}" }], "url": "{{base_url}}/auth/me" }
+        },
+        {
+          "name": "Update Profile",
+          "request": {
+            "method": "PUT",
+            "header": [{ "key": "Accept", "value": "application/json" }, { "key": "Authorization", "value": "Bearer {{customer_token}}" }],
+            "url": "{{base_url}}/auth/profile",
+            "body": { "mode": "raw", "options": { "raw": { "language": "json" } }, "raw": "{\n  \"name\": \"Tên mới\",\n  \"phone\": \"0988888888\",\n  \"address\": \"Hà Nội\"\n}" }
+          }
+        },
+        {
+          "name": "Change Password",
+          "request": {
+            "method": "PUT",
+            "header": [{ "key": "Accept", "value": "application/json" }, { "key": "Authorization", "value": "Bearer {{customer_token}}" }],
+            "url": "{{base_url}}/auth/change-password",
+            "body": { "mode": "raw", "options": { "raw": { "language": "json" } }, "raw": "{\n  \"current_password\": \"123456\",\n  \"new_password\": \"654321\",\n  \"new_password_confirmation\": \"654321\"\n}" }
+          }
+        },
+        {
+          "name": "Logout",
+          "request": { "method": "POST", "header": [{ "key": "Accept", "value": "application/json" }, { "key": "Authorization", "value": "Bearer {{customer_token}}" }], "url": "{{base_url}}/auth/logout" }
+        }
+      ]
+    },
+    {
+      "name": "2. Users (Admin)",
+      "item": [
+        { "name": "List Users", "request": { "method": "GET", "header": [{ "key": "Accept", "value": "application/json" }, { "key": "Authorization", "value": "Bearer {{admin_token}}" }], "url": "{{base_url}}/users?keyword=&per_page=10" } },
+        { "name": "Get User", "request": { "method": "GET", "header": [{ "key": "Accept", "value": "application/json" }, { "key": "Authorization", "value": "Bearer {{admin_token}}" }], "url": "{{base_url}}/users/2" } },
+        {
+          "name": "Create User",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Accept", "value": "application/json" }, { "key": "Authorization", "value": "Bearer {{admin_token}}" }],
+            "url": "{{base_url}}/users",
+            "body": { "mode": "raw", "options": { "raw": { "language": "json" } }, "raw": "{\n  \"name\": \"Nhân viên\",\n  \"email\": \"staff@example.com\",\n  \"password\": \"123456\",\n  \"role\": \"admin\"\n}" }
+          }
+        },
+        {
+          "name": "Update User",
+          "request": {
+            "method": "PUT",
+            "header": [{ "key": "Accept", "value": "application/json" }, { "key": "Authorization", "value": "Bearer {{admin_token}}" }],
+            "url": "{{base_url}}/users/2",
+            "body": { "mode": "raw", "options": { "raw": { "language": "json" } }, "raw": "{\n  \"name\": \"Khách hàng VIP\",\n  \"role\": \"customer\"\n}" }
+          }
+        },
+        { "name": "Delete User", "request": { "method": "DELETE", "header": [{ "key": "Accept", "value": "application/json" }, { "key": "Authorization", "value": "Bearer {{admin_token}}" }], "url": "{{base_url}}/users/3" } }
+      ]
+    },
+    {
+      "name": "3. Categories",
+      "item": [
+        { "name": "List Categories (public)", "request": { "method": "GET", "header": [{ "key": "Accept", "value": "application/json" }], "url": "{{base_url}}/categories" } },
+        { "name": "Get Category (public)", "request": { "method": "GET", "header": [{ "key": "Accept", "value": "application/json" }], "url": "{{base_url}}/categories/1" } },
+        {
+          "name": "Create Category (admin)",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Accept", "value": "application/json" }, { "key": "Authorization", "value": "Bearer {{admin_token}}" }],
+            "url": "{{base_url}}/categories",
+            "body": { "mode": "raw", "options": { "raw": { "language": "json" } }, "raw": "{\n  \"name\": \"Đồng hồ\",\n  \"description\": \"Đồng hồ thông minh\"\n}" }
+          }
+        },
+        {
+          "name": "Update Category (admin)",
+          "request": {
+            "method": "PUT",
+            "header": [{ "key": "Accept", "value": "application/json" }, { "key": "Authorization", "value": "Bearer {{admin_token}}" }],
+            "url": "{{base_url}}/categories/1",
+            "body": { "mode": "raw", "options": { "raw": { "language": "json" } }, "raw": "{\n  \"name\": \"Điện thoại di động\"\n}" }
+          }
+        },
+        { "name": "Delete Category (admin)", "request": { "method": "DELETE", "header": [{ "key": "Accept", "value": "application/json" }, { "key": "Authorization", "value": "Bearer {{admin_token}}" }], "url": "{{base_url}}/categories/4" } }
+      ]
+    },
+    {
+      "name": "4. Products",
+      "item": [
+        { "name": "List Products (search + filter + paginate)", "request": { "method": "GET", "header": [{ "key": "Accept", "value": "application/json" }], "url": "{{base_url}}/products?keyword=&category_id=&status=active&min_price=&max_price=&per_page=10&page=1" } },
+        { "name": "Get Product (public)", "request": { "method": "GET", "header": [{ "key": "Accept", "value": "application/json" }], "url": "{{base_url}}/products/1" } },
+        {
+          "name": "Create Product (admin)",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Accept", "value": "application/json" }, { "key": "Authorization", "value": "Bearer {{admin_token}}" }],
+            "url": "{{base_url}}/products",
+            "body": { "mode": "raw", "options": { "raw": { "language": "json" } }, "raw": "{\n  \"category_id\": 1,\n  \"name\": \"Google Pixel 9\",\n  \"description\": \"Điện thoại Google\",\n  \"price\": 18990000,\n  \"stock\": 12,\n  \"image\": \"https://example.com/pixel9.jpg\",\n  \"status\": \"active\"\n}" }
+          }
+        },
+        {
+          "name": "Update Product (admin)",
+          "request": {
+            "method": "PUT",
+            "header": [{ "key": "Accept", "value": "application/json" }, { "key": "Authorization", "value": "Bearer {{admin_token}}" }],
+            "url": "{{base_url}}/products/1",
+            "body": { "mode": "raw", "options": { "raw": { "language": "json" } }, "raw": "{\n  \"price\": 21990000,\n  \"stock\": 25\n}" }
+          }
+        },
+        { "name": "Toggle Status (admin)", "request": { "method": "PATCH", "header": [{ "key": "Accept", "value": "application/json" }, { "key": "Authorization", "value": "Bearer {{admin_token}}" }], "url": "{{base_url}}/products/1/toggle-status" } },
+        { "name": "Delete Product (admin)", "request": { "method": "DELETE", "header": [{ "key": "Accept", "value": "application/json" }, { "key": "Authorization", "value": "Bearer {{admin_token}}" }], "url": "{{base_url}}/products/8" } }
+      ]
+    },
+    {
+      "name": "5. Orders & Statistics",
+      "item": [
+        {
+          "name": "Place Order (customer)",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Accept", "value": "application/json" }, { "key": "Authorization", "value": "Bearer {{customer_token}}" }],
+            "url": "{{base_url}}/orders",
+            "body": { "mode": "raw", "options": { "raw": { "language": "json" } }, "raw": "{\n  \"shipping_address\": \"123 Lê Lợi, Quận 1, TP.HCM\",\n  \"phone\": \"0912345678\",\n  \"note\": \"Giao giờ hành chính\",\n  \"items\": [\n    { \"product_id\": 1, \"quantity\": 2 },\n    { \"product_id\": 6, \"quantity\": 1 }\n  ]\n}" }
+          }
+        },
+        { "name": "My Orders (customer)", "request": { "method": "GET", "header": [{ "key": "Accept", "value": "application/json" }, { "key": "Authorization", "value": "Bearer {{customer_token}}" }], "url": "{{base_url}}/orders?status=&per_page=10" } },
+        { "name": "All Orders (admin)", "request": { "method": "GET", "header": [{ "key": "Accept", "value": "application/json" }, { "key": "Authorization", "value": "Bearer {{admin_token}}" }], "url": "{{base_url}}/orders?status=pending&per_page=10" } },
+        { "name": "Order Detail", "request": { "method": "GET", "header": [{ "key": "Accept", "value": "application/json" }, { "key": "Authorization", "value": "Bearer {{customer_token}}" }], "url": "{{base_url}}/orders/1" } },
+        {
+          "name": "Update Status (admin)",
+          "request": {
+            "method": "PATCH",
+            "header": [{ "key": "Accept", "value": "application/json" }, { "key": "Authorization", "value": "Bearer {{admin_token}}" }],
+            "url": "{{base_url}}/orders/1/status",
+            "body": { "mode": "raw", "options": { "raw": { "language": "json" } }, "raw": "{\n  \"status\": \"processing\"\n}" }
+          }
+        },
+        { "name": "Cancel Order (customer)", "request": { "method": "PATCH", "header": [{ "key": "Accept", "value": "application/json" }, { "key": "Authorization", "value": "Bearer {{customer_token}}" }], "url": "{{base_url}}/orders/1/cancel" } },
+        { "name": "Statistics (admin)", "request": { "method": "GET", "header": [{ "key": "Accept", "value": "application/json" }, { "key": "Authorization", "value": "Bearer {{admin_token}}" }], "url": "{{base_url}}/statistics" } }
+      ]
+    }
+  ]
+}
