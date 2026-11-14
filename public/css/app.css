@@ -20,5 +20,7 @@ body.is-admin .admin-only { display: block; }
 .navbar-nav .nav-item.auth-only, .navbar-nav .nav-item.admin-only { display: none; }
 body.logged-in .navbar-nav .nav-item.auth-only { display: list-item; }
 body.is-admin .navbar-nav .nav-item.admin-only { display: list-item; }
+/* Admin không thấy menu dành cho khách hàng */
+body.is-admin .customer-only { display: none !important; }
 
 .auth-box { max-width: 440px; margin: 2rem auto; }

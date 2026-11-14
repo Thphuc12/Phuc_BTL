@@ -18,7 +18,7 @@
         <div class="collapse navbar-collapse" id="nav">
             <ul class="navbar-nav me-auto">
                 <li class="nav-item"><a class="nav-link" href="#/products">Sản phẩm</a></li>
-                <li class="nav-item auth-only"><a class="nav-link" href="#/orders">Đơn hàng của tôi</a></li>
+                <li class="nav-item auth-only customer-only"><a class="nav-link" href="#/orders">Đơn hàng của tôi</a></li>
                 <li class="nav-item dropdown admin-only">
                     <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#">Quản trị</a>
                     <ul class="dropdown-menu">
