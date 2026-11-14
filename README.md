@@ -46,6 +46,12 @@ DB_PASSWORD=
 
 rồi chạy lại `php artisan migrate:fresh --seed`.
 
+Hoặc import sẵn file SQL (đã có bảng + dữ liệu mẫu) thay cho bước migrate:
+
+```bash
+mysql -u root -p < database/shop_api.sql
+```
+
 **Tài khoản mẫu** (sau khi seed):
 
 | Vai trò | Email | Mật khẩu |
