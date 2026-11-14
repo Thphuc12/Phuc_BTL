@@ -201,7 +201,24 @@ Ví dụ body đặt hàng:
 - **Chống truy cập trái phép**: không token → 401, sai role → 403, role không thể tự set khi đăng ký.
 - Mật khẩu được hash tự động (cast `hashed` trong `User` model).
 
-## 8. Test bằng Postman
+## 8. Giao diện demo (Frontend)
+
+Mở `http://127.0.0.1:8000/` sau khi chạy `php artisan serve`.
+
+Frontend là một trang đơn (SPA) viết bằng **HTML + JavaScript thuần + Bootstrap 5**, không cần cài Node.
+Toàn bộ dữ liệu đều lấy qua RESTful API ở trên bằng `fetch`, token lưu trong `localStorage`.
+
+| File | Vai trò |
+|---|---|
+| `resources/views/app.blade.php` | Khung HTML (navbar, modal, vùng nội dung) |
+| `public/js/app.js` | Gọi API, điều hướng theo hash (`#/products`, `#/cart`, `#/admin/...`), render từng trang |
+| `public/css/app.css` | Style bổ sung |
+
+Chức năng trên giao diện:
+- **Khách / Customer**: xem sản phẩm (tìm kiếm, lọc danh mục, lọc giá, phân trang), giỏ hàng, đặt hàng, xem và huỷ đơn, sửa thông tin cá nhân, đổi mật khẩu, đăng ký, đăng nhập.
+- **Admin**: thống kê, quản lý sản phẩm, danh mục, đơn hàng (chuyển trạng thái), người dùng.
+
+## 9. Test bằng Postman
 
 Import file `postman_collection.json`. Collection có biến `base_url`, `admin_token`, `customer_token`.
 Gọi **Login Admin** / **Login Customer** trước, token sẽ tự lưu vào biến nhờ script test.
