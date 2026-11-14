@@ -141,12 +141,11 @@ async function pageLogin() {
     <div class="card auth-box shadow-sm"><div class="card-body p-4">
         <h4 class="mb-3 text-center">Đăng nhập</h4>
         <form onsubmit="doLogin(event)">
-            <div class="mb-3"><label class="form-label">Email</label><input name="email" type="email" class="form-control" required value="customer@example.com"></div>
-            <div class="mb-3"><label class="form-label">Mật khẩu</label><input name="password" type="password" class="form-control" required value="123456"></div>
+            <div class="mb-3"><label class="form-label">Email</label><input name="email" type="email" class="form-control" required placeholder="Nhập email"></div>
+            <div class="mb-3"><label class="form-label">Mật khẩu</label><input name="password" type="password" class="form-control" required placeholder="Nhập mật khẩu"></div>
             <button class="btn btn-primary w-100">Đăng nhập</button>
         </form>
-        <div class="text-muted small mt-3">Tài khoản mẫu: <b>admin@example.com</b> / <b>customer@example.com</b> — mật khẩu <b>123456</b></div>
-        <div class="text-center mt-2">Chưa có tài khoản? <a href="#/register">Đăng ký</a></div>
+        <div class="text-center mt-3">Chưa có tài khoản? <a href="#/register">Đăng ký</a></div>
     </div></div>`);
 }
 
