@@ -14,26 +14,67 @@ tổ chức theo mô hình phân tầng **Controller → Service → Repository 
 | Phân quyền | Middleware `role:admin` |
 | Test API | Postman (file `postman_collection.json`) |
 
-## 2. Cài đặt và chạy
+## 2. Cài đặt và chạy (Windows)
 
-```bash
-# 1. Cài thư viện
+### 2.1. Cài công cụ (chỉ làm một lần trên mỗi máy)
+
+1. **PHP 8.3**: mở PowerShell, chạy `winget install PHP.PHP.8.3`. Đóng và mở lại PowerShell, kiểm tra `php -v`.
+2. **Bật extension cho PHP** (bản winget chưa có `php.ini`). Dán khối sau vào PowerShell:
+
+```powershell
+$phpDir = Split-Path (Get-Command php).Source
+Copy-Item "$phpDir\php.ini-development" "$phpDir\php.ini"
+$ini = Get-Content "$phpDir\php.ini"
+$ini = $ini -replace '^;?extension_dir = "ext"', 'extension_dir = "ext"'
+foreach ($ext in 'curl','fileinfo','mbstring','openssl','pdo_mysql','pdo_sqlite','sqlite3','zip','intl','gd') {
+    $ini = $ini -replace "^;extension=$ext$", "extension=$ext"
+}
+$ini | Set-Content "$phpDir\php.ini" -Encoding utf8
+```
+
+3. **Composer**: tải `Composer-Setup.exe` tại https://getcomposer.org/download và cài mặc định. Mở lại PowerShell, kiểm tra `composer -V`.
+4. **Git**: tải tại https://git-scm.com/download/win nếu chưa có.
+
+Nếu đã dùng XAMPP hoặc Laragon thì PHP, MySQL đã có sẵn, chỉ cần cài Composer và Git.
+
+### 2.2. Chạy dự án
+
+> Lưu ý: trong PowerShell gõ **từng lệnh một**, chờ xong mới gõ lệnh tiếp.
+> Nếu thấy dấu `>>` nghĩa là bạn đã dán nhiều dòng, nhấn `Ctrl + C` và làm lại.
+> Không chạy trong `C:\WINDOWS\system32`, hãy `cd` sang ổ D hoặc Documents trước.
+
+```powershell
+cd D:\
+git clone https://github.com/Thphuc12/Phuc_BTL.git
+cd Phuc_BTL
 composer install
-
-# 2. Tạo file cấu hình + key
 copy .env.example .env
 php artisan key:generate
-
-# 3. Tạo database + dữ liệu mẫu
 php artisan migrate:fresh --seed
-
-# 4. Chạy server
 php artisan serve
 ```
 
-API chạy tại: `http://127.0.0.1:8000/api`
+Mở trình duyệt: giao diện tại `http://127.0.0.1:8000`, API tại `http://127.0.0.1:8000/api`.
+Giữ cửa sổ PowerShell mở trong lúc dùng, nhấn `Ctrl + C` để dừng server.
 
-**Dùng MySQL thay SQLite:** mở `.env`, sửa:
+**Lần sau chạy lại** chỉ cần:
+
+```powershell
+cd D:\Phuc_BTL
+php artisan serve
+```
+
+**Reset dữ liệu về ban đầu:** `php artisan migrate:fresh --seed`
+
+### 2.3. Dùng MySQL thay SQLite (khi cần phpMyAdmin để báo cáo)
+
+Bật MySQL trong XAMPP, import file `database/shop_api.sql` bằng phpMyAdmin (tab Import) hoặc:
+
+```bash
+mysql -u root -p < database/shop_api.sql
+```
+
+Mở `.env`, sửa:
 
 ```
 DB_CONNECTION=mysql
@@ -44,20 +85,25 @@ DB_USERNAME=root
 DB_PASSWORD=
 ```
 
-rồi chạy lại `php artisan migrate:fresh --seed`.
+Rồi `php artisan serve`. File SQL đã có sẵn bảng và dữ liệu mẫu nên không cần migrate nữa.
 
-Hoặc import sẵn file SQL (đã có bảng + dữ liệu mẫu) thay cho bước migrate:
-
-```bash
-mysql -u root -p < database/shop_api.sql
-```
-
-**Tài khoản mẫu** (sau khi seed):
+### 2.4. Tài khoản mẫu
 
 | Vai trò | Email | Mật khẩu |
 |---|---|---|
 | Admin | admin@example.com | 123456 |
 | Customer | customer@example.com | 123456 |
+
+### 2.5. Lỗi hay gặp
+
+| Lỗi | Nguyên nhân và cách sửa |
+|---|---|
+| `No application encryption key has been specified` | Chưa chạy `php artisan key:generate` |
+| `Could not open input file: artisan` | Đang đứng sai thư mục, `cd` vào thư mục dự án |
+| `Class "Laravel\Sanctum\..." not found` | Chưa chạy `composer install` hoặc chạy chưa xong |
+| `The file database.sqlite already exists` | Bình thường, bỏ qua |
+| Thiếu extension `pdo_sqlite`, `mbstring`, `openssl`, `fileinfo` | Chưa bật trong `php.ini`, xem mục 2.1 bước 2 |
+| `could not find driver` khi dùng MySQL | Chưa bật `extension=pdo_mysql` trong `php.ini` |
 
 ## 3. Kiến trúc phân tầng
 
