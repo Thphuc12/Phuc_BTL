@@ -435,9 +435,11 @@ async function pageAdminProducts(page = 1) {
         </div>
     </div>
     <table class="table bg-white shadow-sm">
-        <thead><tr><th>#</th><th>Tên</th><th>Danh mục</th><th>Giá</th><th>Kho</th><th>Trạng thái</th><th class="text-end">Thao tác</th></tr></thead>
+        <thead><tr><th>#</th><th>Ảnh</th><th>Tên</th><th>Danh mục</th><th>Giá</th><th>Kho</th><th>Trạng thái</th><th class="text-end">Thao tác</th></tr></thead>
         <tbody>${items.map(p => `<tr>
-            <td>${p.id}</td><td>${esc(p.name)}</td><td>${esc(p.category?.name)}</td><td>${money(p.price)}</td><td>${p.stock}</td>
+            <td>${p.id}</td>
+            <td>${p.image ? `<img src="${esc(p.image)}" class="thumb">` : '<i class="bi bi-box-seam text-muted fs-4"></i>'}</td>
+            <td>${esc(p.name)}</td><td>${esc(p.category?.name)}</td><td>${money(p.price)}</td><td>${p.stock}</td>
             <td><span class="badge bg-${p.status === 'active' ? 'success' : 'secondary'}" role="button" title="Bấm để đổi" onclick="toggleProduct(${p.id})">${p.status === 'active' ? 'Đang bán' : 'Ngừng bán'}</span></td>
             <td class="text-end">
                 <button class="btn btn-sm btn-outline-primary" onclick='productForm(${JSON.stringify(p)})'><i class="bi bi-pencil"></i></button>

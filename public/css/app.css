@@ -7,7 +7,8 @@ body { background: #f5f6fa; }
     background: linear-gradient(135deg, #e3e7ff, #f8e1ff); font-size: 3rem; color: #6c6c9c;
     border-radius: .375rem .375rem 0 0;
 }
-.product-img img { height: 100%; width: 100%; object-fit: cover; border-radius: .375rem .375rem 0 0; }
+.product-img img { height: 100%; width: 100%; object-fit: contain; background: #fff; border-radius: .375rem .375rem 0 0; }
+.thumb { width: 56px; height: 56px; object-fit: contain; background: #fff; border: 1px solid #eee; border-radius: .25rem; }
 
 .stat-card { border-left: 5px solid; }
 .stat-card .stat-value { font-size: 1.8rem; font-weight: 700; }

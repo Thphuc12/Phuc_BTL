@@ -34,20 +34,25 @@ class DatabaseSeeder extends Seeder
             'address' => 'TP. Hồ Chí Minh',
         ]);
 
-        // Danh mục + sản phẩm mẫu
+        // Danh mục + sản phẩm mẫu (ảnh nằm trong public/images/products/)
+        $img = fn (string $file) => "/images/products/{$file}";
+
         $categories = [
             'Điện thoại' => [
-                ['name' => 'iPhone 15', 'price' => 22990000, 'stock' => 20],
-                ['name' => 'Samsung Galaxy S24', 'price' => 19990000, 'stock' => 15],
-                ['name' => 'Xiaomi 14', 'price' => 14990000, 'stock' => 30],
+                ['name' => 'iPhone 15', 'price' => 22990000, 'stock' => 20, 'image' => $img('iphone.jpg')],
+                ['name' => 'Samsung Galaxy S24', 'price' => 19990000, 'stock' => 15, 'image' => $img('samsung.jpg')],
+                ['name' => 'Xiaomi 14', 'price' => 14990000, 'stock' => 30, 'image' => $img('xiaomi.jpg')],
             ],
             'Laptop' => [
                 ['name' => 'MacBook Air M3', 'price' => 27990000, 'stock' => 10],
-                ['name' => 'Dell XPS 13', 'price' => 32990000, 'stock' => 8],
+                ['name' => 'Dell XPS 13', 'price' => 32990000, 'stock' => 8, 'image' => $img('dell.jpg')],
+            ],
+            'Máy tính bảng' => [
+                ['name' => 'iPad Air M2', 'price' => 16990000, 'stock' => 12, 'image' => $img('ipad.jpg')],
             ],
             'Phụ kiện' => [
-                ['name' => 'Tai nghe AirPods Pro', 'price' => 5990000, 'stock' => 50],
-                ['name' => 'Sạc nhanh 65W', 'price' => 490000, 'stock' => 100],
+                ['name' => 'Tai nghe AirPods Pro', 'price' => 5990000, 'stock' => 50, 'image' => $img('airpod.jpg')],
+                ['name' => 'Sạc nhanh 65W', 'price' => 490000, 'stock' => 100, 'image' => $img('65w.jpg')],
                 ['name' => 'Chuột không dây', 'price' => 350000, 'stock' => 0, 'status' => 'inactive'],
             ],
         ];
@@ -66,6 +71,7 @@ class DatabaseSeeder extends Seeder
                     'description' => "Mô tả sản phẩm {$product['name']}",
                     'price' => $product['price'],
                     'stock' => $product['stock'],
+                    'image' => $product['image'] ?? null,
                     'status' => $product['status'] ?? Product::STATUS_ACTIVE,
                 ]);
             }
